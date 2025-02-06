@@ -300,7 +300,8 @@ The current list of supported models:
 |                | gpt-3.5-turbo-16k-0613 | --model gpt-3.5-turbo-16k-0613 |
 |                | gpt-3.5-turbo-0613     | --model gpt-3.5-turbo-0613 |
 |                | gpt-4-0613             | --model gpt-4-0613 |
-| Anthropic      | Claude 3.5 Sonnet      | --model claude-3-5-sonnet-20240620 |
+| Anthropic      | Claude 3.5 Sonnet v2   | --model claude-3-5-sonnet-20241022 |
+|                | Claude 3.5 Sonnet      | --model claude-3-5-sonnet-20240620 |
 |                | Claude 3 Opus          | --model claude-3-opus-20240229 |
 |                | Claude 3 Sonnet        | --model claude-3-sonnet-20240229 |
 |                | Claude 3 Haiku         | --model claude-3-haiku-20240307 |

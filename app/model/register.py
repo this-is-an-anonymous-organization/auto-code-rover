@@ -32,6 +32,7 @@ def register_all_models() -> None:
     common.register_model(claude.Claude3Sonnet())
     common.register_model(claude.Claude3Haiku())
     common.register_model(claude.Claude3_5Sonnet())
+    common.register_model(claude.Claude3_5SonnetNew())
 
     common.register_model(bedrock.AnthropicClaude3Opus())
     common.register_model(bedrock.AnthropicClaude3Sonnet())
