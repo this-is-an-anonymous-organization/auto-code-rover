@@ -7,6 +7,7 @@ import os
 import sys
 from typing import Literal, cast
 
+from litellm import NotGiven
 from loguru import logger
 from openai import NOT_GIVEN, BadRequestError, OpenAI
 from openai.types.chat import (
@@ -254,6 +255,7 @@ class Gpt_o1mini(OpenaiModel):
         tools: list[dict] | None = None,
         response_format: Literal["text", "json_object"] = "text",
         temperature: float | None = None,
+        reasoning_effort: Literal["low", "medium", "high"] | NotGiven = "medium",
         **kwargs,
     ) -> tuple[
         str,
@@ -263,16 +265,67 @@ class Gpt_o1mini(OpenaiModel):
         int,
         int,
     ]:
-        if response_format == "json_object":
-            last_content = messages[-1]["content"]
-            last_content += "\nYour response MUST start with { and end with }. DO NOT write anything else other than the json. Ignore writing triple-backticks."
-            messages[-1]["content"] = last_content
-            response_format = "text"
+        # if response_format == "json_object":
+        #     last_content = messages[-1]["content"]
+        #     last_content += "\nYour response MUST start with { and end with }. DO NOT write anything else other than the json. Ignore writing triple-backticks."
+        #     messages[-1]["content"] = last_content
+        #     response_format = "text"
 
-        for msg in messages:
-            msg["role"] = "user"
+        # for msg in messages:
+        #     msg["role"] = "user"
         return super().call(
-            messages, top_p, tools, response_format, temperature, **kwargs
+            messages,
+            top_p,
+            tools,
+            response_format,
+            NOT_GIVEN,
+            reasoning_effort=reasoning_effort,
+            **kwargs,
+        )
+
+
+class Gpt_o1(OpenaiModel):
+    def __init__(self):
+        super().__init__(
+            "o1-2024-12-17", 8192, 0.000003, 0.000012, parallel_tool_call=True
+        )
+        self.note = "State of the art reasoning model. Up to Oct 2023."
+
+    # FIXME: the returned type contains OpenAI specific Types, which should be avoided
+    @retry(wait=wait_random_exponential(min=30, max=600), stop=stop_after_attempt(3))
+    def call(
+        self,
+        messages: list[dict],
+        top_p: float = 1,
+        tools: list[dict] | None = None,
+        response_format: Literal["text", "json_object"] = "text",
+        temperature: float | None = None,
+        reasoning_effort: Literal["low", "medium", "high"] | NotGiven = "high",
+        **kwargs,
+    ) -> tuple[
+        str,
+        list[ChatCompletionMessageToolCall] | None,
+        list[FunctionCallIntent],
+        float,
+        int,
+        int,
+    ]:
+        # if response_format == "json_object":
+        #     last_content = messages[-1]["content"]
+        #     last_content += "\nYour response MUST start with { and end with }. DO NOT write anything else other than the json. Ignore writing triple-backticks."
+        #     messages[-1]["content"] = last_content
+        #     response_format = "text"
+
+        # for msg in messages:
+        #     msg["role"] = "user"
+        return super().call(
+            messages,
+            top_p,
+            tools,
+            response_format,
+            NOT_GIVEN,
+            reasoning_effort=reasoning_effort,
+            **kwargs,
         )
 
 
